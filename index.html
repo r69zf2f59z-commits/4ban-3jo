@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sea Pick — 오늘의 바다를 고르다</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#top" aria-label="Sea Pick 홈">
+          <span class="brand-mark">◒</span>
+          <span>sea pick</span>
+        </a>
+        <nav class="nav-links" aria-label="주요 메뉴">
+          <a class="active" href="#recommendations">추천</a>
+          <a id="navMap" href="#map-page">지도</a>
+          <a id="navSaved" href="#saved-page">찜한 장소</a>
+        </nav>
+        <button class="profile-button" id="profileButton" type="button" aria-label="프로필 이름 변경"><span id="profileName">민지</span> <span>⌄</span></button>
+      </header>
+
+      <main id="top">
+        <section class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">THURSDAY, AUGUST 06 · BUSAN</p>
+            <h1>오늘, 어떤 바다를<br><em>고를까요?</em></h1>
+            <p class="hero-description">파도와 바람, 수온을 한눈에 보고<br>지금 가장 잘 맞는 바다를 찾아보세요.</p>
+            <div class="search-box">
+              <span>⌕</span>
+              <input type="search" id="searchInput" placeholder="지역이나 해변을 검색해 보세요" aria-label="지역이나 해변 검색" />
+              <button type="button" id="searchButton">찾기</button>
+            </div>
+          </div>
+          <div class="hero-orbit" aria-hidden="true">
+            <div class="sun"></div>
+            <div class="wave wave-one"></div>
+            <div class="wave wave-two"></div>
+            <div class="hero-badge"><strong>86</strong><span>오늘의<br>컨디션</span></div>
+            <span class="float-label label-wind">WIND 6 m/s</span>
+            <span class="float-label label-water">WATER 23°</span>
+          </div>
+        </section>
+
+        <section class="content-section" id="recommendations">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">PERSONALIZED FOR YOU</p>
+              <h2><span id="visitorName">민지</span>님을 위한 추천</h2>
+            </div>
+            <span class="updated">● 실시간 데이터 업데이트됨</span>
+          </div>
+          <div class="sort-controls" aria-label="추천 정렬"><span>정렬</span><button class="sort-button active" data-sort="match" type="button">추천순</button><button class="sort-button" data-sort="distance" type="button">거리순</button><button class="sort-button" data-sort="views" type="button">조회 많은 순</button></div>
+          <div class="activity-tabs" role="tablist" aria-label="활동 선택">
+            <button class="activity-tab active" data-activity="all" role="tab">전체</button>
+            <button class="activity-tab" data-activity="surf" role="tab">〰 서핑</button>
+            <button class="activity-tab" data-activity="kayak" role="tab">◇ 카약</button>
+            <button class="activity-tab" data-activity="paddle" role="tab">⌁ 패들보드</button>
+          </div>
+          <div class="recommendation-grid" id="recommendationGrid"></div>
+          <button class="more-spots-button" id="moreSpotsButton" type="button">부산 해수욕장 더보기 <span>＋</span></button>
+        </section>
+
+        <section class="insight-section" id="map">
+          <div class="map-card">
+            <div class="map-header"><span class="eyebrow">LIVE CONDITIONS</span><span class="map-pill">부산 · 12곳</span></div>
+            <div class="map-art" id="miniMap" aria-label="Google 지도 기반 부산 해안 지도"><div class="google-map-surface" id="googleMapMini"></div>
+              <div class="map-grid"></div><div class="coastline"></div><div class="water-label water-east">동해 바다</div><div class="water-label water-south">남해 연안</div><div class="road road-one"></div><div class="road road-two"></div><span class="road-name road-name-one">해운대해변로</span><span class="road-name road-name-two">광안해변로</span>
+              <span class="area-label area-haeundae">해운대구</span><span class="area-label area-suyeong">수영구</span><span class="area-label area-saha">사하구</span>
+              <button class="map-pin pin-one" data-place="송정 해변" aria-label="송정 해변 보기">●</button>
+              <button class="map-pin pin-two" data-place="광안리 해변" aria-label="광안리 해변 보기">●</button>
+              <button class="map-pin pin-three" data-place="다대포 해변" aria-label="다대포 해변 보기">●</button>
+              <div class="map-label label-one">송정 해변</div><div class="map-label label-two">광안리</div><div class="map-label label-three">다대포</div>
+            </div>
+            <div class="map-footer"><span><i class="legend-dot good"></i>활동하기 좋아요</span><span><i class="legend-dot caution"></i>확인 필요</span><button class="map-link" type="button" id="openMap">전체 지도 보기 →</button></div><a class="naver-map-link" id="miniNaverLink" target="_blank" rel="noreferrer">Google 지도에서 보기 ↗</a>
+          </div>
+          <aside class="safety-card" id="saved">
+            <div class="card-topline"><span class="eyebrow">SAFETY FIRST</span><span class="shield">♢</span></div>
+            <h3>출발 전,<br><em>안전하게 확인해요.</em></h3>
+            <p>오늘 부산 해안은 전반적으로 안정적이지만, 오후에는 바람이 조금 강해질 수 있어요.</p>
+            <div class="safety-row"><span>해상 특보</span><strong class="safe">없음</strong></div>
+            <div class="safety-row"><span>자외선 지수</span><strong class="medium">높음 · 7</strong></div>
+            <button class="outline-button" type="button" id="safetyButton">안전 체크리스트 보기 <span>→</span></button>
+          </aside>
+        </section>
+        <section class="detail-view" id="detailView" hidden></section>
+        <section class="profile-view" id="profileView" hidden>
+          <button class="detail-back" type="button" id="profileBack">← 홈으로 돌아가기</button>
+          <div class="profile-heading"><p class="eyebrow">YOUR SEA PROFILE</p><h2>나에게 맞는 바다를<br><em>더 정확하게 찾아볼게요.</em></h2><p>프로필을 저장하면 거주 지역과 선호 활동을 기준으로 가까운 해수욕장을 우선 추천합니다.</p></div>
+          <div class="profile-layout">
+            <div class="profile-card">
+              <div class="avatar-upload"><div class="avatar-preview" id="avatarPreview">민지</div><label class="upload-button" for="avatarInput">사진 바꾸기</label><input id="avatarInput" type="file" accept="image/*" hidden></div>
+              <label class="field-label">이름<input id="profileNameInput" type="text" maxlength="12" placeholder="이름을 입력하세요"></label>
+              <div class="field-row"><label class="field-label">나이<select id="ageInput"><option value="">선택 안 함</option><option>10대</option><option>20대</option><option>30대</option><option>40대</option><option>50대 이상</option></select></label><label class="field-label">성별<select id="genderInput"><option value="">선택 안 함</option><option>여성</option><option>남성</option><option>선택 안 함</option></select></label></div>
+              <label class="field-label">거주 지역<select id="regionInput"><option value="">지역을 선택하세요</option><option>부산 전체</option><option>해운대구</option><option>수영구</option><option>기장군</option><option>사하구</option><option>강서구</option><option>서구</option><option>영도구</option><option>남구</option></select></label>
+            </div>
+            <div class="profile-card preference-card"><p class="eyebrow">FAVORITE ACTIVITIES</p><h3>좋아하는 해양 레저를<br>모두 골라주세요.</h3><div class="preference-options"><label><input type="checkbox" value="surf"><span>〰</span>서핑</label><label><input type="checkbox" value="kayak"><span>◇</span>카약</label><label><input type="checkbox" value="paddle"><span>⌁</span>패들보드</label></div><div class="profile-tip">선택한 활동과 지역의 해수욕장에 더 높은 추천 점수를 반영해요.</div><button class="save-profile" id="saveProfile" type="button">프로필 저장하고 추천 보기 →</button></div>
+          </div>
+        </section>
+        <section class="page-view" id="pageView" hidden></section>
+      </main>
+      <footer><span>© 2026 sea pick</span><span>바다를 더 가깝고 안전하게</span></footer>
+    </div>
+    <div class="map-modal" id="mapModal" aria-hidden="true">
+      <div class="modal-backdrop" data-close-map></div>
+      <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="mapModalTitle">
+        <div class="modal-heading"><div><p class="eyebrow">BUSAN COASTAL MAP</p><h2 id="mapModalTitle">부산 해양 레저 지도</h2></div><button class="close-modal" type="button" data-close-map aria-label="지도 닫기">×</button></div>
+        <div class="large-map-art" id="largeMap" aria-label="확대된 Google 부산 해안 지도"><div class="google-map-surface" id="googleMapLarge"></div>
+          <div class="map-grid"></div><div class="coastline"></div><div class="water-label water-east">동해 바다</div><div class="water-label water-south">남해 연안</div><div class="road road-one"></div><div class="road road-two"></div><span class="road-name road-name-one">해운대해변로</span><span class="road-name road-name-two">광안해변로</span>
+          <span class="area-label area-haeundae">해운대구</span><span class="area-label area-suyeong">수영구</span><span class="area-label area-saha">사하구</span>
+          <button class="map-pin pin-one" data-place="송정 해변" aria-label="송정 해변 보기">●</button><button class="map-pin pin-two" data-place="광안리 해변" aria-label="광안리 해변 보기">●</button><button class="map-pin pin-three" data-place="다대포 해변" aria-label="다대포 해변 보기">●</button>
+          <div class="map-label label-one">송정 해변 <small>서핑 98%</small></div><div class="map-label label-two">광안리 <small>패들보드 94%</small></div><div class="map-label label-three">다대포 <small>카약 91%</small></div><div class="map-compass">N<br><span>↑</span></div>
+        </div>
+        <div class="modal-places"><div><strong id="mapPlaceCount">12곳</strong><span>부산 해수욕장</span></div><div><strong>7곳</strong><span>오늘 추천</span></div><div><strong>10분</strong><span>평균 업데이트</span></div><p>핀을 눌러 장소별 컨디션을 확인해 보세요.</p><a class="naver-map-link" id="largeNaverLink" target="_blank" rel="noreferrer">Google 지도에서 열기 ↗</a></div>
+      </section>
+    </div>
+    <div class="safety-modal" id="safetyModal" aria-hidden="true">
+      <div class="modal-backdrop" data-close-safety></div>
+      <section class="safety-panel" role="dialog" aria-modal="true" aria-labelledby="safetyTitle">
+        <div class="modal-heading"><div><p class="eyebrow">BEFORE YOU GO</p><h2 id="safetyTitle">안전 체크리스트</h2></div><button class="close-modal" type="button" data-close-safety aria-label="안전 체크리스트 닫기">×</button></div>
+        <p class="safety-intro">바다에 들어가기 전 아래 항목을 꼭 확인하세요. 하나라도 해당되지 않으면 출발을 잠시 미뤄주세요.</p>
+        <div class="checklist" id="checklist">
+          <label class="check-item"><input type="checkbox"><span><strong>기상 특보와 풍랑 예보 확인</strong><small>갑작스러운 강풍·호우 특보가 있으면 입수하지 않아요.</small></span></label>
+          <label class="check-item"><input type="checkbox"><span><strong>구명조끼와 활동 장비 점검</strong><small>버클, 스트랩, 보드의 균열과 공기압을 확인해요.</small></span></label>
+          <label class="check-item"><input type="checkbox"><span><strong>동행자·귀가 시간 공유</strong><small>혼자 출발하지 말고 보호자에게 위치와 일정을 알려요.</small></span></label>
+          <label class="check-item"><input type="checkbox"><span><strong>자외선 차단·수분 보충 준비</strong><small>자외선 지수가 높으니 선크림과 물을 챙겨요.</small></span></label>
+        </div>
+        <div class="warning-box"><strong>주의할 점</strong><p>해가 지기 1시간 전에는 물에서 나오고, 음주 후 수상 활동은 절대 하지 마세요. 몸이 좋지 않거나 파도가 예상보다 높으면 즉시 장소를 떠나세요.</p></div>
+        <button class="check-complete" type="button" id="checkComplete">확인 완료 · 안전하게 출발하기</button>
+      </section>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+    <script src="google-maps-config.js"></script>
+    <script src="app.js?v=20260806e"></script>
+  </body>
+</html>
