@@ -227,3 +227,20 @@ openDetail=function(spot){detailWithTravelInfo(spot);setTimeout(()=>showTravelIn
 const travelStyle=document.createElement('style');
 travelStyle.textContent='.travel-info-card{margin:20px 0;padding:16px;background:#f4faf7;border:1px solid #cbe4db;border-radius:7px}.travel-heading{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.travel-heading p{margin:0;color:#4d8b84;font:700 9px "Space Grotesk";letter-spacing:.7px}.travel-heading h4{margin:4px 0 0;color:#173042;font-size:15px}.location-use-button{padding:7px 9px;color:#147080;background:#fff;border:1px solid #b8ddd2;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer}.location-use-button:disabled{opacity:.65;cursor:wait}.travel-origin{display:block;margin:11px 0 9px;color:#6c8490;font-size:10px}.travel-time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.travel-time-grid div{padding:10px 8px;background:#fff;border:1px solid #d9ebe5;border-radius:5px}.travel-time-grid span,.travel-time-grid strong{display:block}.travel-time-grid span{color:#6c8490;font-size:9px}.travel-time-grid strong{margin-top:5px;color:#147080;font-size:12px}.today-beach-status{margin-top:12px;padding:11px;color:#4b6670;background:#fff;border-left:3px solid #ef8b68;border-radius:4px;font-size:10px;line-height:1.55}.today-beach-status span{color:#a45d45;font-weight:700}.today-beach-status p{margin:4px 0 0}@media(max-width:560px){.travel-heading{display:block}.location-use-button{margin-top:10px}.travel-time-grid{gap:5px}.travel-time-grid div{padding:8px 5px}.travel-time-grid strong{font-size:11px}}';
 document.head.appendChild(travelStyle);
+
+const activitySafetyGuides={
+  surf:{icon:'〰',title:'서핑 전 주의사항',summary:'파도와 바람이 바뀌기 쉬우니 입수 전 꼭 해양 상태를 다시 확인하세요.',items:['초보자는 허리 높이 이하의 파도에서 시작하세요.','리쉬(발목 줄)와 구명조끼 상태를 확인하세요.','해변 구조요원 안내 구역 안에서만 활동하세요.']},
+  kayak:{icon:'◇',title:'카약 전 주의사항',summary:'바람과 조류의 영향을 크게 받으니, 출발 지점과 복귀 시간을 미리 정해두세요.',items:['구명조끼는 출발부터 복귀까지 착용하세요.','바람이 강하거나 특보가 있으면 출항하지 마세요.','혼자 먼 곳으로 이동하지 말고 일행과 시야를 유지하세요.']},
+  paddle:{icon:'⌁',title:'패들보드 전 주의사항',summary:'균형을 잡기 어려운 날씨에는 앉거나 무릎을 꿇은 자세로 시작하는 것이 안전해요.',items:['보드 리쉬를 발목에 단단히 연결하세요.','수온이 낮거나 바람이 강하면 보온 장비를 챙기세요.','수영 구역과 선박 항로를 피해서 이동하세요.']}
+};
+const activityGuide=document.createElement('section');activityGuide.className='activity-safety-guide';activityGuide.hidden=true;document.querySelector('.activity-tabs').insertAdjacentElement('afterend',activityGuide);
+function renderActivityGuide(activity){
+  const guide=activitySafetyGuides[activity];
+  if(!guide){activityGuide.hidden=true;activityGuide.innerHTML='';return}
+  activityGuide.hidden=false;
+  activityGuide.innerHTML=`<div class="activity-guide-icon">${guide.icon}</div><div><p class="eyebrow">ACTIVITY SAFETY GUIDE</p><h3>${guide.title}</h3><p class="activity-guide-summary">${guide.summary}</p><ul>${guide.items.map(item=>`<li>${item}</li>`).join('')}</ul></div>`;
+}
+document.querySelectorAll('.activity-tab').forEach(tab=>tab.addEventListener('click',()=>renderActivityGuide(tab.dataset.activity)));
+const activityGuideStyle=document.createElement('style');
+activityGuideStyle.textContent='.activity-safety-guide{display:grid;grid-template-columns:auto 1fr;gap:15px;margin:16px 0 4px;padding:17px 18px;background:#f2f8f5;border:1px solid #cce5dc;border-radius:7px}.activity-safety-guide[hidden]{display:none}.activity-guide-icon{display:grid;place-items:center;width:34px;height:34px;color:#fff;background:#147080;border-radius:50%;font-size:19px}.activity-safety-guide .eyebrow{margin:0;color:#4d8b84;font-size:9px}.activity-safety-guide h3{margin:4px 0 5px;color:#173042;font-size:16px}.activity-guide-summary{margin:0;color:#627b80;font-size:11px;line-height:1.5}.activity-safety-guide ul{display:grid;gap:4px;margin:10px 0 0;padding-left:16px;color:#526b70;font-size:10px;line-height:1.45}.activity-safety-guide li::marker{color:#ef8b68}@media(max-width:560px){.activity-safety-guide{gap:10px;padding:14px}.activity-safety-guide h3{font-size:14px}}';
+document.head.appendChild(activityGuideStyle);
