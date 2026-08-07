@@ -358,3 +358,31 @@ openDetail=function(spot){
   pageView.hidden=true;
   openDetailFromSavedPage(spot);
 };
+
+function liveSuitability(current){
+  const wind=Number(current.wind_speed_10m??0),rain=Number(current.precipitation??0),code=Number(current.weather_code??0);
+  let score=100-Math.max(0,wind-2)*5-(rain>0?Math.min(35,10+rain*9):0);
+  if([51,53,55,61,63,65,80,81,82].includes(code))score-=10;
+  if([95,96,99].includes(code))score-=30;
+  return Math.max(35,Math.min(100,Math.round(score)));
+}
+function estimatedCrowd(score,index){
+  const now=new Date(),hour=Number(new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Seoul',hour:'2-digit',hour12:false}).format(now));
+  const weekend=[0,6].includes(new Date(now.toLocaleString('en-US',{timeZone:'Asia/Seoul'})).getDay());
+  const busy=(weekend?24:6)+(hour>=11&&hour<=17?18:0)+Math.max(0,score-72)/3+(index%4)*4;
+  const level=busy>=45?'높음':busy>=27?'보통':'낮음';
+  return `실시간 추정 ${level}`;
+}
+async function loadLiveBeachConditions(){
+  await Promise.all(spots.map(async(spot,index)=>{
+    try{
+      const url=`https://api.open-meteo.com/v1/forecast?latitude=${spot.lat}&longitude=${spot.lng}&current=weather_code,precipitation,wind_speed_10m&timezone=Asia%2FSeoul`;
+      const response=await fetch(url);if(!response.ok)throw new Error('weather');
+      const current=(await response.json()).current||{};
+      const score=liveSuitability(current);spot.score=`${score}%`;spot.crowd=estimatedCrowd(score,index);
+    }catch(error){spot.crowd=spot.crowd.replace(/^실시간 추정\s*/,'실시간 추정 ')}
+  }));
+  const active=document.querySelector('.activity-tab.active');
+  if(active&&!document.body.classList.contains('page-active')&&!document.body.classList.contains('detail-active'))render(active.dataset.activity,document.querySelector('#searchInput').value.trim());
+}
+loadLiveBeachConditions();
