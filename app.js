@@ -192,3 +192,38 @@ async function loadWeather(){
   catch(error){updateWeather({current:{temperature_2m:23,precipitation:0,weather_code:1},hourly:{time:[],precipitation_probability:[20]}})}
 }
 loadWeather();
+
+let deviceLocation=null;
+function travelOrigin(){
+  if(deviceLocation)return {lat:deviceLocation.lat,lng:deviceLocation.lng,label:'현재 기기 위치 기준'};
+  const region=localStorage.getItem('seaPickRegion')||'';
+  const center=regionCenters[region]||busanCenter;
+  return {lat:center.lat,lng:center.lng,label:region?`${region} 거주지 기준`:'부산 중심 기준'};
+}
+function travelMinutes(distanceKm){
+  const routeKm=Math.max(1,Math.round((distanceKm*1.35+1.2)*10)/10);
+  return {routeKm,walk:Math.max(6,Math.round(routeKm/4.5*60)),transit:Math.max(8,Math.round(8+routeKm/24*60)),car:Math.max(5,Math.round(5+routeKm/34*60))};
+}
+function todayBeachStatus(spot){
+  const wave=Number((spot.wave.match(/[\d.]+/)||['0'])[0]);const wind=Number((spot.wind.match(/[\d.]+/)||['0'])[0]);
+  const condition=wave<=.5&&wind<=3?'잔잔한 편이라 패들보드와 가벼운 물놀이에 좋아요.':wave<=.8?'파도가 적당해 초·중급 서핑과 카약 활동 전 장비 점검이 필요해요.':'파도와 바람이 있는 편이니 경험자 중심 활동을 추천해요.';
+  return `오늘 ${spot.name}은 ${spot.crowd} 상태예요. ${spot.wave}, ${spot.wind}, ${spot.water}로 ${condition}`;
+}
+function showTravelInfo(spot){
+  const card=document.querySelector('.detail-info-card');if(!card)return;
+  card.querySelector('.travel-info-card')?.remove();
+  const origin=travelOrigin();const latDistance=(spot.lat-origin.lat)*111;const lngDistance=(spot.lng-origin.lng)*91;const directKm=Math.sqrt(latDistance*latDistance+lngDistance*lngDistance);const times=travelMinutes(directKm);
+  const panel=document.createElement('section');panel.className='travel-info-card';
+  panel.innerHTML=`<div class="travel-heading"><div><p>HOW TO GET THERE</p><h4>현재 위치에서 예상 이동 시간</h4></div><button type="button" class="location-use-button">⌖ 내 위치 사용</button></div><span class="travel-origin">${origin.label} · 약 ${times.routeKm}km</span><div class="travel-time-grid"><div><span>🚶 도보</span><strong>약 ${times.walk}분</strong></div><div><span>🚌 대중교통</span><strong>약 ${times.transit}분</strong></div><div><span>🚗 차량</span><strong>약 ${times.car}분</strong></div></div><div class="today-beach-status"><span>오늘의 ${spot.name}</span><p>${todayBeachStatus(spot)}</p></div>`;
+  const note=card.querySelector('.detail-note');card.insertBefore(panel,note);
+  panel.querySelector('.location-use-button').onclick=()=>{
+    if(!navigator.geolocation){toastMessage('이 기기에서는 위치 정보를 사용할 수 없어요.');return}
+    const button=panel.querySelector('.location-use-button');button.disabled=true;button.textContent='위치 확인 중…';
+    navigator.geolocation.getCurrentPosition(position=>{deviceLocation={lat:position.coords.latitude,lng:position.coords.longitude};showTravelInfo(spot);toastMessage('현재 위치 기준으로 이동 시간을 계산했어요.');},()=>{button.disabled=false;button.textContent='⌖ 내 위치 사용';toastMessage('위치 권한을 허용하면 현재 위치 기준으로 계산할 수 있어요.');},{enableHighAccuracy:false,timeout:8000,maximumAge:300000});
+  };
+}
+const detailWithTravelInfo=openDetail;
+openDetail=function(spot){detailWithTravelInfo(spot);setTimeout(()=>showTravelInfo(spot),520)};
+const travelStyle=document.createElement('style');
+travelStyle.textContent='.travel-info-card{margin:20px 0;padding:16px;background:#f4faf7;border:1px solid #cbe4db;border-radius:7px}.travel-heading{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.travel-heading p{margin:0;color:#4d8b84;font:700 9px "Space Grotesk";letter-spacing:.7px}.travel-heading h4{margin:4px 0 0;color:#173042;font-size:15px}.location-use-button{padding:7px 9px;color:#147080;background:#fff;border:1px solid #b8ddd2;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer}.location-use-button:disabled{opacity:.65;cursor:wait}.travel-origin{display:block;margin:11px 0 9px;color:#6c8490;font-size:10px}.travel-time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.travel-time-grid div{padding:10px 8px;background:#fff;border:1px solid #d9ebe5;border-radius:5px}.travel-time-grid span,.travel-time-grid strong{display:block}.travel-time-grid span{color:#6c8490;font-size:9px}.travel-time-grid strong{margin-top:5px;color:#147080;font-size:12px}.today-beach-status{margin-top:12px;padding:11px;color:#4b6670;background:#fff;border-left:3px solid #ef8b68;border-radius:4px;font-size:10px;line-height:1.55}.today-beach-status span{color:#a45d45;font-weight:700}.today-beach-status p{margin:4px 0 0}@media(max-width:560px){.travel-heading{display:block}.location-use-button{margin-top:10px}.travel-time-grid{gap:5px}.travel-time-grid div{padding:8px 5px}.travel-time-grid strong{font-size:11px}}';
+document.head.appendChild(travelStyle);
