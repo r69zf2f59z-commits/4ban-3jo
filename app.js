@@ -270,7 +270,7 @@ document.querySelector('#safetyButton').addEventListener('click',renderSafetyQui
 quizComplete.onclick=()=>{
   if(Object.keys(safetyQuizAnswers).length<10){toastMessage(`아직 ${10-Object.keys(safetyQuizAnswers).length}문제를 더 풀어주세요.`);return}
   let score=0;quizList.querySelectorAll('.quiz-item').forEach(row=>{const index=Number(row.dataset.question);const item=safetyQuizQuestions[index];const correct=safetyQuizAnswers[index]===item.answer;if(correct)score++;row.classList.add(correct?'is-correct':'is-wrong');row.querySelector('.quiz-tip').textContent=correct?'정답이에요. '+item.tip:'다시 확인해요. '+item.tip;row.querySelector('.quiz-tip').hidden=false;row.querySelectorAll('button').forEach(button=>button.disabled=true)});
-  const ready=score>=7;quizResult.hidden=false;quizResult.className=`quiz-result ${ready?'is-ready':'needs-review'}`;quizResult.innerHTML=`<strong>${ready?'🎉 바다 활동을 준비했어요!':'🛟 한 번 더 안전을 확인해요.'}</strong><p>${score}/10문제 정답 · ${ready?'출발 전 현장 날씨와 특보만 다시 확인하고 안전하게 즐기세요.':'7문제 이상 정답이면 준비 완료예요. 틀린 항목을 다시 확인해보세요.'}</p><button type="button" id="quizRetry">다시 풀기</button>`;
+  const ready=score>=7;quizResult.hidden=false;quizResult.className=`quiz-result ${ready?'is-ready':'needs-review'}`;quizResult.innerHTML=`<strong>${ready?'🎉 바다에서 놀 준비가 충분히 되었습니다!':'🛟 한 번 더 안전을 확인해요.'}</strong><p>${score}/10문제 정답 · ${ready?'출발 전 현장 날씨와 특보만 다시 확인하고 안전하게 즐기세요.':'7문제 이상 정답이면 준비 완료예요. 틀린 항목을 다시 확인해보세요.'}</p><button type="button" id="quizRetry">다시 풀기</button>`;
   quizResult.querySelector('#quizRetry').onclick=renderSafetyQuiz;quizComplete.textContent=ready?'준비 완료':'안전 항목 다시 보기';
 };
 renderSafetyQuiz();
