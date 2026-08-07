@@ -178,3 +178,17 @@ openDetail=function(spot){
 const rentalPageStyle=document.createElement('style');
 rentalPageStyle.textContent='.rental-open-button{padding:7px 9px;color:#147080;background:#eef7f4;border:1px solid #b8ddd2;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer}.rental-open-button:hover{color:#fff;background:#147080}.rental-page-layout{display:grid;grid-template-columns:1.2fr .8fr;gap:20px;margin-top:28px}.rental-page-map{min-height:520px;overflow:hidden;background:#e7f2ee;border-radius:10px;box-shadow:var(--shadow)}.rental-page-list{padding:22px;background:#fff;border:1px solid var(--line);border-radius:9px}.rental-page-list-heading{display:flex;align-items:baseline;gap:8px;padding-bottom:16px;border-bottom:1px solid var(--line)}.rental-page-list-heading strong{color:var(--deep);font:700 25px "Space Grotesk"}.rental-page-list-heading span{color:var(--muted);font-size:11px}.rental-page-card{display:flex;gap:12px;padding:17px 0;border-bottom:1px solid var(--line)}.rental-page-card:last-child{border-bottom:0}.rental-number{display:grid;place-items:center;width:27px;height:27px;color:#fff;background:#ef8b68;border-radius:50%;font:700 10px "Space Grotesk";flex:none}.rental-page-card h3{margin:0;color:var(--ink);font-size:14px}.rental-page-card p{margin:5px 0;color:var(--muted);font-size:10px}.rental-page-card a{color:var(--deep);font-size:10px;font-weight:700;text-decoration:none}.rental-page-card a:hover{text-decoration:underline}@media(max-width:850px){.rental-page-layout{grid-template-columns:1fr}.rental-page-map{min-height:380px}}';
 document.head.appendChild(rentalPageStyle);
+
+const weatherCodes={0:['맑음','☀'],1:['대체로 맑음','🌤'],2:['부분적으로 흐림','⛅'],3:['흐림','☁'],45:['안개','〰'],48:['안개','〰'],51:['약한 이슬비','🌦'],53:['이슬비','🌦'],55:['강한 이슬비','🌧'],61:['약한 비','🌦'],63:['비','🌧'],65:['강한 비','🌧'],71:['약한 눈','🌨'],73:['눈','🌨'],75:['강한 눈','❄'],80:['소나기','🌦'],81:['소나기','🌧'],82:['강한 소나기','🌧'],95:['뇌우','⛈'],96:['우박 동반 뇌우','⛈'],99:['강한 뇌우','⛈']};
+function updateWeather(data){
+  const current=data.current||{};const code=Number(current.weather_code);const weather=weatherCodes[code]||['정보 없음','•'];
+  const times=data.hourly?.time||[];const probabilities=data.hourly?.precipitation_probability||[];const now=new Date();let nearest=0;let nearestGap=Infinity;
+  times.forEach((time,index)=>{const gap=Math.abs(new Date(time).getTime()-now.getTime());if(gap<nearestGap){nearest=index;nearestGap=gap}});
+  document.querySelector('#weatherIcon').textContent=weather[1];document.querySelector('#weatherSummary').textContent=weather[0];document.querySelector('#weatherTemperature').textContent=`${Math.round(current.temperature_2m??23)}°`;document.querySelector('#weatherRain').textContent=`${Number(current.precipitation??0).toFixed(1)}mm`;document.querySelector('#weatherProbability').textContent=`${Math.round(probabilities[nearest]??20)}%`;document.querySelector('#weatherStrip').classList.remove('is-loading');
+}
+async function loadWeather(){
+  const strip=document.querySelector('#weatherStrip');if(!strip)return;
+  try{const response=await fetch('https://api.open-meteo.com/v1/forecast?latitude=35.1796&longitude=129.0756&current=temperature_2m,precipitation,weather_code,wind_speed_10m&hourly=precipitation_probability&forecast_days=1&timezone=Asia%2FSeoul');if(!response.ok)throw new Error('weather');updateWeather(await response.json())}
+  catch(error){updateWeather({current:{temperature_2m:23,precipitation:0,weather_code:1},hourly:{time:[],precipitation_probability:[20]}})}
+}
+loadWeather();
