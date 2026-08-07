@@ -250,28 +250,24 @@ const safetyQuizQuestions=[
   {question:'카약과 패들보드는 구명조끼를 출발부터 복귀까지 착용해야 한다.',answer:true,tip:'장비 활동은 항상 구명조끼를 착용해요.'},
   {question:'음주 후 수상 레저 활동은 판단력이 괜찮다면 가능하다.',answer:false,tip:'음주 후 수상 활동은 절대 하지 않아요.'},
   {question:'서핑할 때 리쉬는 보드와 연결되어 있는지 확인해야 한다.',answer:true,tip:'리쉬는 보드 유실과 충돌 위험을 줄여줘요.'},
-  {question:'해가 지기 시작해도 인원이 많으면 계속 활동해도 된다.',answer:false,tip:'해 지기 전에는 물에서 나와 시야가 확보될 때 마무리해요.'},
-  {question:'출발 전 휴대폰 방수팩과 비상 연락 방법을 확인하는 것이 좋다.',answer:true,tip:'119 연락 방법과 동행자 연락처를 미리 준비해요.'},
-  {question:'바람이 강해지면 패들보드는 앉거나 무릎을 꿇은 자세로 이동할 수 있다.',answer:true,tip:'균형이 어렵다면 낮은 자세로 이동하고 무리하지 않아요.'},
-  {question:'혼자 멀리 이동해도 장비가 있으면 안전하므로 귀가 시간을 알릴 필요가 없다.',answer:false,tip:'동행자나 보호자에게 장소와 귀가 시간을 꼭 공유해요.'},
-  {question:'수온이 낮을 때는 보온 장비와 활동 시간을 더 신경 써야 한다.',answer:true,tip:'저체온을 막기 위해 보온 장비와 휴식을 준비해요.'},
-  {question:'파도가 예상보다 높아지면 즉시 해변으로 돌아와야 한다.',answer:true,tip:'현장 조건이 달라지면 즉시 활동을 멈추고 안전 구역으로 이동해요.'}
+  {question:'해가 지기 시작해도 인원이 많으면 계속 활동해도 된다.',answer:false,tip:'해 지기 전에는 물에서 나와 시야가 확보될 때 마무리해요.'}
 ];
-let safetyQuizAnswers={};
+let safetyQuizAnswers={},safetyQuizFinished=false,safetyQuizReady=false;
 const quizList=document.querySelector('#checklist'),quizProgress=document.querySelector('#checklistProgress'),quizResult=document.querySelector('#quizResult'),quizComplete=document.querySelector('#checkComplete');
-function updateQuizProgress(){quizProgress.textContent=`${Object.keys(safetyQuizAnswers).length}/10`}
+function updateQuizProgress(){quizProgress.textContent=`${Object.keys(safetyQuizAnswers).length}/${safetyQuizQuestions.length}`}
 function renderSafetyQuiz(){
-  safetyQuizAnswers={};quizResult.hidden=true;quizResult.innerHTML='';quizComplete.textContent='결과 확인하기';
+  safetyQuizAnswers={};safetyQuizFinished=false;safetyQuizReady=false;quizResult.hidden=true;quizResult.innerHTML='';quizComplete.textContent='결과 확인하기';
   quizList.innerHTML=safetyQuizQuestions.map((item,index)=>`<article class="quiz-item" data-question="${index}"><div class="quiz-question"><span>${index+1}</span><strong>${item.question}</strong></div><div class="quiz-actions"><button type="button" data-answer="true">O</button><button type="button" data-answer="false">X</button></div><small class="quiz-tip" hidden></small></article>`).join('');
   quizList.querySelectorAll('[data-answer]').forEach(button=>button.onclick=()=>{const row=button.closest('.quiz-item');const index=Number(row.dataset.question);safetyQuizAnswers[index]=button.dataset.answer==='true';row.querySelectorAll('[data-answer]').forEach(action=>action.classList.toggle('selected',action===button));updateQuizProgress()});
   updateQuizProgress();
 }
 document.querySelector('#safetyButton').addEventListener('click',renderSafetyQuiz);
 quizComplete.onclick=()=>{
-  if(Object.keys(safetyQuizAnswers).length<10){toastMessage(`아직 ${10-Object.keys(safetyQuizAnswers).length}문제를 더 풀어주세요.`);return}
+  if(safetyQuizFinished){if(safetyQuizReady){safetyModal.classList.remove('open');safetyModal.setAttribute('aria-hidden','true');toastMessage('바다에서 놀 준비가 충분히 되었습니다!');}else renderSafetyQuiz();return}
+  if(Object.keys(safetyQuizAnswers).length<safetyQuizQuestions.length){toastMessage(`아직 ${safetyQuizQuestions.length-Object.keys(safetyQuizAnswers).length}문제를 더 풀어주세요.`);return}
   let score=0;quizList.querySelectorAll('.quiz-item').forEach(row=>{const index=Number(row.dataset.question);const item=safetyQuizQuestions[index];const correct=safetyQuizAnswers[index]===item.answer;if(correct)score++;row.classList.add(correct?'is-correct':'is-wrong');row.querySelector('.quiz-tip').textContent=correct?'정답이에요. '+item.tip:'다시 확인해요. '+item.tip;row.querySelector('.quiz-tip').hidden=false;row.querySelectorAll('button').forEach(button=>button.disabled=true)});
-  const ready=score>=7;quizResult.hidden=false;quizResult.className=`quiz-result ${ready?'is-ready':'needs-review'}`;quizResult.innerHTML=`<strong>${ready?'🎉 바다에서 놀 준비가 충분히 되었습니다!':'🛟 한 번 더 안전을 확인해요.'}</strong><p>${score}/10문제 정답 · ${ready?'출발 전 현장 날씨와 특보만 다시 확인하고 안전하게 즐기세요.':'7문제 이상 정답이면 준비 완료예요. 틀린 항목을 다시 확인해보세요.'}</p><button type="button" id="quizRetry">다시 풀기</button>`;
-  quizResult.querySelector('#quizRetry').onclick=renderSafetyQuiz;quizComplete.textContent=ready?'준비 완료':'안전 항목 다시 보기';
+  const ready=score>=4;safetyQuizFinished=true;safetyQuizReady=ready;quizResult.hidden=false;quizResult.className=`quiz-result ${ready?'is-ready':'needs-review'}`;quizResult.innerHTML=`<strong>${ready?'🎉 바다에서 놀 준비가 충분히 되었습니다!':'🛟 한 번 더 안전을 확인해요.'}</strong><p>${score}/${safetyQuizQuestions.length}문제 정답 · ${ready?'준비 완료를 누르면 퀴즈 창이 닫혀요.':'4문제 이상 정답이면 준비 완료예요. 틀린 항목을 다시 확인해보세요.'}</p><button type="button" id="quizRetry">다시 풀기</button>`;
+  quizResult.querySelector('#quizRetry').onclick=renderSafetyQuiz;quizComplete.textContent=ready?'준비 완료':'다시 풀기';
 };
 renderSafetyQuiz();
 const quizStyle=document.createElement('style');
