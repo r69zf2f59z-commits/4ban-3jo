@@ -67,3 +67,114 @@ async function recordLiveSpotView(spot){try{const response=await fetch(liveViewU
 async function loadLiveSpotViews(){await Promise.all(spots.map(readLiveSpotView));if(sortMode==='views'){const active=document.querySelector('.activity-tab.active');if(active)render(active.dataset.activity,document.querySelector('#searchInput').value.trim())}}
 openDetail=function(spot){originalOpenDetailForViews(spot);recordLiveSpotView(spot)};
 loadLiveSpotViews();
+
+// Beach-specific rental shop locations. These markers are intentionally kept separate
+// from beach markers so the map can show both types without losing either detail.
+const rentalShopsBySpot = [
+  [{name:'해운대 서프 렌탈',lat:35.1582,lng:129.1600,activity:'서핑·패들보드'}],
+  [{name:'송정 서핑하우스',lat:35.1794,lng:129.2005,activity:'서핑·보드'},{name:'송정 SUP 스테이션',lat:35.1778,lng:129.1988,activity:'패들보드'}],
+  [{name:'광안리 SUP 렌탈',lat:35.1538,lng:129.1195,activity:'패들보드·카약'}],
+  [{name:'다대포 카약 렌탈',lat:35.0458,lng:128.9664,activity:'카약·패들보드'}],
+  [{name:'일광 바다렌탈',lat:35.2649,lng:129.2340,activity:'카약·SUP'}],
+  [{name:'임랑 서프 렌탈',lat:35.3204,lng:129.2674,activity:'서핑·보드'}],
+  [{name:'송도 해양레저 렌탈',lat:35.0754,lng:129.0175,activity:'카약·패들보드'}],
+  [{name:'대변항 카약 대여점',lat:35.2244,lng:129.2245,activity:'카약·구명조끼'}],
+  [{name:'오륙도 해양레저 렌탈',lat:35.1005,lng:129.1237,activity:'카약·스노클링'}],
+  [{name:'태종대 감지 렌탈',lat:35.0544,lng:129.0874,activity:'카약·구명조끼'}],
+  [{name:'연화리 SUP 렌탈',lat:35.2254,lng:129.2445,activity:'패들보드·카약'}],
+  [{name:'청사포 서프 렌탈',lat:35.1594,lng:129.2006,activity:'서핑·보드'}],
+  [{name:'신호 해양레저 대여점',lat:35.0804,lng:128.8805,activity:'패들보드·카약'}],
+  [{name:'몰운대 해안 렌탈',lat:35.0484,lng:128.9669,activity:'카약·구명조끼'}],
+  [{name:'가덕도 바다체험 렌탈',lat:34.9955,lng:128.8115,activity:'카약·스노클링'}],
+  [{name:'공수마을 해양레저 렌탈',lat:35.1904,lng:129.2205,activity:'패들보드·카약'}],
+  [{name:'시랑리 카약 대여점',lat:35.1884,lng:129.2235,activity:'카약·구명조끼'}],
+  [{name:'칠암 서프 렌탈',lat:35.2754,lng:129.2655,activity:'서핑·보드'}]
+];
+spots.forEach((spot,index)=>{spot.rentalShops=rentalShopsBySpot[index]||[]});
+const rentalShopsByName = {
+  '해운대 해수욕장':[{name:'해운대 서프 렌탈',lat:35.1582,lng:129.1600,activity:'서핑·패들보드'}],
+  '송정 해수욕장':[{name:'송정 서핑하우스',lat:35.1794,lng:129.2005,activity:'서핑·보드'},{name:'송정 SUP 스테이션',lat:35.1778,lng:129.1988,activity:'패들보드'}],
+  '광안리 해수욕장':[{name:'광안리 SUP 렌탈',lat:35.1538,lng:129.1195,activity:'패들보드·카약'}],
+  '다대포 해수욕장':[{name:'다대포 카약 렌탈',lat:35.0458,lng:128.9664,activity:'카약·패들보드'}],
+  '일광 해수욕장':[{name:'일광 바다렌탈',lat:35.2649,lng:129.2340,activity:'카약·SUP'}],
+  '송도 해수욕장':[{name:'송도 해양레저 렌탈',lat:35.0754,lng:129.0175,activity:'카약·패들보드'}],
+  '오륙도 해맞이공원':[{name:'오륙도 해양레저 렌탈',lat:35.1005,lng:129.1237,activity:'카약·스노클링'}],
+  '태종대 감지해변':[{name:'태종대 감지 렌탈',lat:35.0544,lng:129.0874,activity:'카약·구명조끼'}],
+  '청사포 해변':[{name:'청사포 서프 렌탈',lat:35.1594,lng:129.2006,activity:'서핑·보드'}],
+  '해동용궁사 해안':[{name:'시랑리 카약 대여점',lat:35.1884,lng:129.2235,activity:'카약·구명조끼'}],
+  '임랑 해수욕장':[{name:'임랑 서프 렌탈',lat:35.3204,lng:129.2674,activity:'서핑·보드'}],
+  '대변항 해안':[{name:'대변항 카약 대여점',lat:35.2244,lng:129.2245,activity:'카약·구명조끼'}],
+  '기장 연화리':[{name:'연화리 SUP 렌탈',lat:35.2254,lng:129.2445,activity:'패들보드·카약'}],
+  '신호 해수욕장':[{name:'신호 해양레저 대여점',lat:35.0804,lng:128.8805,activity:'패들보드·카약'}],
+  '몰운대 해안':[{name:'몰운대 해안 렌탈',lat:35.0484,lng:128.9669,activity:'카약·구명조끼'}],
+  '가덕도 대항항':[{name:'가덕도 바다체험 렌탈',lat:34.9955,lng:128.8115,activity:'카약·스노클링'}],
+  '공수마을 해안':[{name:'공수마을 해양레저 렌탈',lat:35.1904,lng:129.2205,activity:'패들보드·카약'}],
+  '칠암 해안':[{name:'칠암 서프 렌탈',lat:35.2754,lng:129.2655,activity:'서핑·보드'}]
+};
+spots.forEach(spot=>{spot.rentalShops=rentalShopsByName[spot.name]||[]});
+const rentalMarkers=[],rentalInfos=[];
+const rentalMarkerIcon=()=>({path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#ef8b68',fillOpacity:1,strokeColor:'#fff',strokeWeight:2});
+const clearRentalMarkers=()=>{rentalMarkers.forEach(marker=>marker.setMap(null));rentalMarkers.length=0;rentalInfos.forEach(info=>info.close());rentalInfos.length=0};
+const beachMarkerUpdate=updateMarkers;
+updateMarkers=function(items){
+  beachMarkerUpdate(items);
+  clearRentalMarkers();
+  if(!maps.length||!window.google?.maps)return;
+  items.forEach(spot=>maps.forEach(map=>spot.rentalShops.forEach(shop=>{
+    const marker=new google.maps.Marker({map,position:{lat:shop.lat,lng:shop.lng},title:`${shop.name} · ${spot.name}`,icon:rentalMarkerIcon()});
+    const info=new google.maps.InfoWindow({content:`<div class="rental-info-window"><strong>${shop.name}</strong><span>${spot.name} 주변 렌탈샵</span><small>${shop.activity}</small></div>`});
+    marker.addListener('click',()=>{info.open({map,anchor:marker});map.panTo({lat:shop.lat,lng:shop.lng});map.setZoom(15);toastMessage(`${shop.name} 위치를 확인하세요.`)});
+    rentalMarkers.push(marker);rentalInfos.push(info);
+  })));
+};
+const detailWithBeachMarker=openDetail;
+openDetail=function(spot){
+  detailWithBeachMarker(spot);
+  setTimeout(()=>{
+    const card=document.querySelector('.detail-info-card');
+    if(card&&!card.querySelector('.rental-shop-panel')){
+      const panel=document.createElement('div');panel.className='rental-shop-panel';
+      panel.innerHTML=`<h4>주변 렌탈샵</h4>${spot.rentalShops.map(shop=>`<div class="rental-shop-row"><strong>${shop.name}</strong><span>${shop.activity}</span></div>`).join('')}`;
+      card.appendChild(panel);
+    }
+    if(detailMap&&window.google?.maps){
+      spot.rentalShops.forEach(shop=>{
+        const marker=new google.maps.Marker({map:detailMap,position:{lat:shop.lat,lng:shop.lng},title:shop.name,icon:rentalMarkerIcon()});
+        const info=new google.maps.InfoWindow({content:`<div class="rental-info-window"><strong>${shop.name}</strong><span>${spot.name} 주변 렌탈샵</span><small>${shop.activity}</small></div>`});
+        marker.addListener('click',()=>info.open({map:detailMap,anchor:marker}));
+      });
+    }
+  },260);
+};
+const rentalStyle=document.createElement('style');
+rentalStyle.textContent='.rental-info-window{display:grid;gap:4px;min-width:155px;padding:3px;color:#173042;font-family:"DM Sans","Noto Sans KR",sans-serif}.rental-info-window strong{font-size:13px}.rental-info-window span,.rental-info-window small{color:#6c8490;font-size:10px}.rental-shop-panel{margin-top:20px;padding-top:17px;border-top:1px solid var(--line)}.rental-shop-panel h4{margin:0 0 10px;color:var(--deep);font-size:15px}.rental-shop-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:11px}.rental-shop-row span{color:var(--muted);text-align:right}';
+document.head.appendChild(rentalStyle);
+
+function openRentalPage(spot){
+  const shops=spot.rentalShops||[];
+  closeViews();
+  document.body.classList.add('page-active');
+  pageView.hidden=false;
+  pageView.innerHTML=`<button class="detail-back" id="rentalBack" type="button">← ${spot.name} 상세로 돌아가기</button><div class="page-heading"><p class="eyebrow">RENTAL SHOP GUIDE</p><h2>${spot.name} 주변 렌탈샵</h2><p>해수욕장 위치와 주변 렌탈샵 위치를 함께 확인하세요.</p></div><div class="rental-page-layout"><div class="rental-page-map" id="rentalPageMap"></div><div class="rental-page-list"><div class="rental-page-list-heading"><strong>${shops.length}곳</strong><span>등록된 렌탈샵</span></div>${shops.map((shop,index)=>`<article class="rental-page-card"><span class="rental-number">${String(index+1).padStart(2,'0')}</span><div><h3>${shop.name}</h3><p>${spot.name} 주변 · ${shop.activity}</p><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${shop.name} ${spot.name} 부산`)}" target="_blank" rel="noreferrer">Google 지도에서 위치 보기 ↗</a></div></article>`).join('')}</div></div>`;
+  history.pushState({rental:spot.name},'',`#rentals=${encodeURIComponent(spot.name)}`);
+  document.querySelector('#rentalBack').onclick=()=>history.back();
+  setTimeout(()=>{
+    if(!window.google?.maps)return;
+    const map=new google.maps.Map(document.querySelector('#rentalPageMap'),{center:{lat:spot.lat,lng:spot.lng},zoom:15,mapTypeControl:true,streetViewControl:false,fullscreenControl:true});
+    new google.maps.Marker({map,position:{lat:spot.lat,lng:spot.lng},title:spot.name,icon:{path:google.maps.SymbolPath.CIRCLE,scale:10,fillColor:'#147080',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});
+    shops.forEach(shop=>{const marker=new google.maps.Marker({map,position:{lat:shop.lat,lng:shop.lng},title:shop.name,icon:rentalMarkerIcon()});const info=new google.maps.InfoWindow({content:`<div class="rental-info-window"><strong>${shop.name}</strong><span>${spot.name} 주변 렌탈샵</span><small>${shop.activity}</small></div>`});marker.addListener('click',()=>info.open({map,anchor:marker}))});
+  },120);
+}
+const detailWithRentalButton=openDetail;
+openDetail=function(spot){
+  detailWithRentalButton(spot);
+  setTimeout(()=>{
+    const row=[...document.querySelectorAll('.detail-list li')].find(item=>item.textContent.includes('장비·편의시설'));
+    if(!row||row.querySelector('.rental-open-button'))return;
+    row.innerHTML=`<span>현장 렌탈샵</span><button class="rental-open-button" type="button">렌탈샵 ${spot.rentalShops.length}곳 보기 →</button>`;
+    row.querySelector('.rental-open-button').onclick=()=>openRentalPage(spot);
+  },380);
+}
+const rentalPageStyle=document.createElement('style');
+rentalPageStyle.textContent='.rental-open-button{padding:7px 9px;color:#147080;background:#eef7f4;border:1px solid #b8ddd2;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer}.rental-open-button:hover{color:#fff;background:#147080}.rental-page-layout{display:grid;grid-template-columns:1.2fr .8fr;gap:20px;margin-top:28px}.rental-page-map{min-height:520px;overflow:hidden;background:#e7f2ee;border-radius:10px;box-shadow:var(--shadow)}.rental-page-list{padding:22px;background:#fff;border:1px solid var(--line);border-radius:9px}.rental-page-list-heading{display:flex;align-items:baseline;gap:8px;padding-bottom:16px;border-bottom:1px solid var(--line)}.rental-page-list-heading strong{color:var(--deep);font:700 25px "Space Grotesk"}.rental-page-list-heading span{color:var(--muted);font-size:11px}.rental-page-card{display:flex;gap:12px;padding:17px 0;border-bottom:1px solid var(--line)}.rental-page-card:last-child{border-bottom:0}.rental-number{display:grid;place-items:center;width:27px;height:27px;color:#fff;background:#ef8b68;border-radius:50%;font:700 10px "Space Grotesk";flex:none}.rental-page-card h3{margin:0;color:var(--ink);font-size:14px}.rental-page-card p{margin:5px 0;color:var(--muted);font-size:10px}.rental-page-card a{color:var(--deep);font-size:10px;font-weight:700;text-decoration:none}.rental-page-card a:hover{text-decoration:underline}@media(max-width:850px){.rental-page-layout{grid-template-columns:1fr}.rental-page-map{min-height:380px}}';
+document.head.appendChild(rentalPageStyle);
