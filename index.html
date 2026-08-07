@@ -35,8 +35,8 @@
               <input type="search" id="searchInput" placeholder="지역이나 해변을 검색해 보세요" aria-label="지역이나 해변 검색" />
               <button type="button" id="searchButton">찾기</button>
             </div>
-            <div class="weather-strip" id="weatherStrip" aria-label="부산 현재 날씨">
-              <div class="weather-main"><span class="weather-icon" id="weatherIcon">☀</span><div><small>부산 현재 날씨</small><strong id="weatherSummary">날씨 불러오는 중</strong></div></div>
+            <div class="weather-strip" id="weatherStrip" aria-label="부산 현재 날씨" style="display:grid;grid-template-columns:1.35fr repeat(3,.7fr);gap:8px;margin-top:14px;padding:10px;background:rgba(255,255,255,.8);border:1px solid #b9d8cf;border-radius:6px">
+              <div class="weather-main" style="display:flex;align-items:center;gap:9px"><span class="weather-icon" id="weatherIcon">☀</span><div><small>부산 현재 날씨</small><strong id="weatherSummary">날씨 불러오는 중</strong></div></div>
               <div class="weather-stat"><span>기온</span><strong id="weatherTemperature">--°</strong></div>
               <div class="weather-stat"><span>강수량</span><strong id="weatherRain">--mm</strong></div>
               <div class="weather-stat"><span>강수확률</span><strong id="weatherProbability">--%</strong></div>
