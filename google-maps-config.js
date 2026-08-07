@@ -1,1 +1,2 @@
-window.GOOGLE_MAPS_API_KEY = 'AIzaSyBdGEm5oCElZdcXV6k6seC1vQ2AMI0SisE';
+// Google Maps is no longer used. Sea Pick now renders maps with Leaflet + OpenStreetMap.
+window.GOOGLE_MAPS_API_KEY = '';

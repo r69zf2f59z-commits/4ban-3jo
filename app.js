@@ -273,3 +273,44 @@ renderSafetyQuiz();
 const quizStyle=document.createElement('style');
 quizStyle.textContent='.quiz-list{gap:9px}.quiz-item{padding:13px;background:#fff;border:1px solid var(--line);border-radius:7px}.quiz-question{display:flex;gap:9px;align-items:flex-start}.quiz-question>span{display:grid;place-items:center;width:20px;height:20px;flex:none;color:#fff;background:#147080;border-radius:50%;font:700 10px "Space Grotesk"}.quiz-question strong{color:var(--ink);font-size:12px;line-height:1.45}.quiz-actions{display:flex;gap:6px;margin:10px 0 0 29px}.quiz-actions button{width:42px;padding:6px;color:#547278;background:#f7faf8;border:1px solid #d3e5df;border-radius:4px;font-size:11px;font-weight:700;cursor:pointer}.quiz-actions button.selected{color:#fff;background:#147080;border-color:#147080}.quiz-item.is-correct{border-color:#8bcbb9;background:#f1faf5}.quiz-item.is-wrong{border-color:#efb496;background:#fff8f2}.quiz-item.is-correct .quiz-question>span{background:#55af94}.quiz-item.is-wrong .quiz-question>span{background:#ef8b68}.quiz-tip{display:block;margin:8px 0 0 29px;color:#6b7e7e;font-size:10px;line-height:1.45}.quiz-result{margin-top:14px;padding:14px;border-radius:6px}.quiz-result strong{font-size:14px}.quiz-result p{margin:6px 0 10px;font-size:11px;line-height:1.55}.quiz-result.is-ready{color:#216b5c;background:#eaf8f1;border:1px solid #a8d9c5}.quiz-result.needs-review{color:#985a43;background:#fff3e9;border:1px solid #f0c4a7}.quiz-result button{padding:7px 10px;color:inherit;background:rgba(255,255,255,.65);border:1px solid currentColor;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer}@media(max-width:560px){.quiz-item{padding:11px}.quiz-question strong{font-size:11px}.quiz-actions{margin-left:27px}.quiz-tip{margin-left:27px}}';
 document.head.appendChild(quizStyle);
+
+// Free map layer: Leaflet + OpenStreetMap. It replaces the Google Maps dependent views.
+showMapFallback=()=>{};
+const leafletMaps=new Map();
+const leafletBeachIcon=L.divIcon({className:'leaflet-beach-marker',html:'<span>🏖</span>',iconSize:[34,34],iconAnchor:[17,17],popupAnchor:[0,-16]});
+const leafletRentalIcon=L.divIcon({className:'leaflet-rental-marker',html:'<span>⌂</span>',iconSize:[28,28],iconAnchor:[14,14],popupAnchor:[0,-14]});
+function createLeafletMap(element,center={lat:35.16,lng:129.14},zoom=10){
+  if(!element||!window.L)return null;
+  const existing=leafletMaps.get(element.id);if(existing){existing.remove();leafletMaps.delete(element.id)}
+  element.parentElement?.classList.add('google-maps-ready');element.querySelectorAll('.google-map-error').forEach(node=>node.remove());
+  const map=L.map(element,{zoomControl:true,scrollWheelZoom:true}).setView([center.lat,center.lng],zoom);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(map);
+  leafletMaps.set(element.id,map);return map;
+}
+function addLeafletSpotMarkers(map,items,focusSpot=null){
+  if(!map)return;
+  items.forEach(spot=>{
+    const beach=L.marker([spot.lat,spot.lng],{icon:leafletBeachIcon,title:spot.name}).addTo(map);
+    beach.bindPopup(`<div class="leaflet-info"><strong>${spot.name}</strong><span>${spot.location}</span><div><b>${spot.water}</b><b>${spot.wind}</b><b>${spot.wave}</b></div><small>🏖 해수욕장 · ${spot.rental}</small></div>`);
+    spot.rentalShops.forEach(shop=>{const rental=L.marker([shop.lat,shop.lng],{icon:leafletRentalIcon,title:`${shop.name} · ${spot.name}`}).addTo(map);rental.bindPopup(`<div class="leaflet-info"><strong>${shop.name}</strong><span>${spot.name} 주변 렌탈샵</span><small>${shop.activity}</small></div>`)});
+  });
+  if(focusSpot){const points=[[focusSpot.lat,focusSpot.lng],...focusSpot.rentalShops.map(shop=>[shop.lat,shop.lng])];map.fitBounds(L.latLngBounds(points),{padding:[35,35],maxZoom:15})}
+}
+function initLeafletOverviewMaps(){
+  [['googleMapMini',10],['googleMapLarge',11]].forEach(([id,zoom])=>{const node=document.querySelector(`#${id}`);const map=createLeafletMap(node,{lat:35.16,lng:129.14},zoom);addLeafletSpotMarkers(map,spots)});
+}
+function showLeafletDetailMap(spot){const node=document.querySelector('#detailMap');const map=createLeafletMap(node,{lat:spot.lat,lng:spot.lng},14);addLeafletSpotMarkers(map,[spot],spot)}
+function showLeafletRentalMap(spot){const node=document.querySelector('#rentalPageMap');const map=createLeafletMap(node,{lat:spot.lat,lng:spot.lng},15);addLeafletSpotMarkers(map,[spot],spot)}
+function showLeafletFullMap(){const node=document.querySelector('#googleMapPage');const map=createLeafletMap(node,{lat:35.16,lng:129.14},10);addLeafletSpotMarkers(map,spots)}
+const detailWithLeafletMap=openDetail;
+openDetail=function(spot){detailWithLeafletMap(spot);setTimeout(()=>showLeafletDetailMap(spot),140)};
+const rentalPageWithLeafletMap=openRentalPage;
+openRentalPage=function(spot){rentalPageWithLeafletMap(spot);setTimeout(()=>showLeafletRentalMap(spot),140)};
+const pageWithLeafletMap=openPage;
+openPage=function(page){pageWithLeafletMap(page);if(page==='map')setTimeout(showLeafletFullMap,140)};
+const openStreetMapBusanUrl='https://www.openstreetmap.org/#map=11/35.1600/129.1400';
+document.querySelector('#miniNaverLink').href=openStreetMapBusanUrl;document.querySelector('#largeNaverLink').href=openStreetMapBusanUrl;
+const leafletStyle=document.createElement('style');
+leafletStyle.textContent='.leaflet-container{font-family:"DM Sans","Noto Sans KR",sans-serif;background:#dcefea}.leaflet-beach-marker,.leaflet-rental-marker{display:grid;place-items:center;border:3px solid #fff;border-radius:50%;box-shadow:0 3px 9px rgba(17,48,66,.32);font-size:14px;line-height:1}.leaflet-beach-marker{background:#147080}.leaflet-rental-marker{background:#ef8b68;font-size:13px}.leaflet-info{display:grid;gap:4px;min-width:160px;color:#173042}.leaflet-info strong{font-size:13px}.leaflet-info span,.leaflet-info small{color:#6c8490;font-size:10px}.leaflet-info div{display:flex;gap:4px}.leaflet-info b{padding:3px 4px;color:#147080;background:#eef7f4;border-radius:3px;font-size:9px}.leaflet-popup-content-wrapper{border-radius:7px}.leaflet-popup-content{margin:11px 13px}.leaflet-control-attribution{font-size:9px!important}.leaflet-control-attribution a{color:#147080!important}';
+document.head.appendChild(leafletStyle);
+setTimeout(initLeafletOverviewMaps,0);
