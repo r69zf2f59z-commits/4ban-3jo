@@ -314,3 +314,25 @@ const leafletStyle=document.createElement('style');
 leafletStyle.textContent='.leaflet-container{font-family:"DM Sans","Noto Sans KR",sans-serif;background:#dcefea}.leaflet-beach-marker,.leaflet-rental-marker{display:grid;place-items:center;border:3px solid #fff;border-radius:50%;box-shadow:0 3px 9px rgba(17,48,66,.32);font-size:14px;line-height:1}.leaflet-beach-marker{background:#147080}.leaflet-rental-marker{background:#ef8b68;font-size:13px}.leaflet-info{display:grid;gap:4px;min-width:160px;color:#173042}.leaflet-info strong{font-size:13px}.leaflet-info span,.leaflet-info small{color:#6c8490;font-size:10px}.leaflet-info div{display:flex;gap:4px}.leaflet-info b{padding:3px 4px;color:#147080;background:#eef7f4;border-radius:3px;font-size:9px}.leaflet-popup-content-wrapper{border-radius:7px}.leaflet-popup-content{margin:11px 13px}.leaflet-control-attribution{font-size:9px!important}.leaflet-control-attribution a{color:#147080!important}';
 document.head.appendChild(leafletStyle);
 setTimeout(initLeafletOverviewMaps,0);
+
+function updateHeroCondition(current){
+  const wind=Number(current.wind_speed_10m??3);const rain=Number(current.precipitation??0);const temperature=Number(current.temperature_2m??23);const weatherCode=Number(current.weather_code??1);
+  let score=100;
+  score-=Math.max(0,wind-3)*4.5;
+  if(rain>0)score-=Math.min(30,8+rain*10);
+  if([2,3,45,48].includes(weatherCode))score-=4;
+  if([51,53,55,61,63,65,80,81,82].includes(weatherCode))score-=12;
+  if([95,96,99].includes(weatherCode))score-=30;
+  if(temperature<17)score-=(17-temperature)*2;
+  if(temperature>31)score-=(temperature-31)*1.5;
+  score=Math.max(35,Math.min(100,Math.round(score)));
+  const status=score>=85?'아주 좋아요 · 가벼운 해양 레저를 즐기기 좋은 날이에요.':score>=70?'활동하기 좋아요 · 출발 전 현장 바람과 파도만 한 번 더 확인하세요.':score>=55?'확인 후 활동 · 바람과 강수량을 살피고 무리한 활동은 피하세요.':'주의 필요 · 기상 변화가 있어 활동을 미루는 편이 안전해요.';
+  const scoreNode=document.querySelector('#heroConditionScore'),statusNode=document.querySelector('#heroConditionStatus'),badge=document.querySelector('#heroConditionBadge');
+  if(scoreNode)scoreNode.textContent=score;if(statusNode)statusNode.textContent=status;if(badge)badge.setAttribute('aria-label',`오늘의 해양 활동 컨디션 ${score}점. ${status}`);
+}
+const weatherUpdateWithCondition=updateWeather;
+updateWeather=function(data){weatherUpdateWithCondition(data);updateHeroCondition(data.current||{})};
+updateHeroCondition({temperature_2m:23,precipitation:0,wind_speed_10m:3,weather_code:1});
+const heroConditionStyle=document.createElement('style');
+heroConditionStyle.textContent='.hero-condition-note{position:absolute;right:6%;top:77%;z-index:2;width:190px;padding:10px 12px;background:rgba(255,255,255,.88);border:1px solid rgba(194,224,216,.95);border-radius:6px;box-shadow:0 8px 22px rgba(28,95,99,.1)}.hero-condition-note strong,.hero-condition-note span,.hero-condition-note small{display:block}.hero-condition-note strong{color:#147080;font-size:10px}.hero-condition-note span{margin-top:3px;color:#49666c;font-size:9px;line-height:1.35}.hero-condition-note small{margin-top:5px;color:#8a6554;font-size:9px;line-height:1.35}@media(max-width:850px){.hero-condition-note{right:7%;top:75%}}@media(max-width:560px){.hero-condition-note{position:static;width:auto;margin:14px 0 0}.hero-condition-note span{font-size:10px}.hero-condition-note small{font-size:10px}}';
+document.head.appendChild(heroConditionStyle);

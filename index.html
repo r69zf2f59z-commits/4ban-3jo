@@ -47,7 +47,8 @@
             <div class="sun"></div>
             <div class="wave wave-one"></div>
             <div class="wave wave-two"></div>
-            <div class="hero-badge"><strong>86</strong><span>오늘의<br>컨디션</span></div>
+            <div class="hero-badge" id="heroConditionBadge" aria-label="오늘의 해양 활동 컨디션"><strong id="heroConditionScore">86</strong><span>오늘의<br>컨디션</span></div>
+            <div class="hero-condition-note" id="heroConditionNote"><strong>오늘의 해양 활동 컨디션</strong><span>바람·강수량·기온을 반영한 100점 점수예요.</span><small id="heroConditionStatus">점수가 높을수록 활동하기 좋아요.</small></div>
             <span class="float-label label-wind">WIND 6 m/s</span>
             <span class="float-label label-water">WATER 23°</span>
           </div>
@@ -137,6 +138,6 @@
     </div>
     <div class="toast" id="toast" role="status"></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script src="app.js?v=20260807leaflet"></script>
+    <script src="app.js?v=20260807condition"></script>
   </body>
 </html>
