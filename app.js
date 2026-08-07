@@ -336,3 +336,17 @@ updateHeroCondition({temperature_2m:23,precipitation:0,wind_speed_10m:3,weather_
 const heroConditionStyle=document.createElement('style');
 heroConditionStyle.textContent='.hero-condition-note{position:absolute;right:6%;top:77%;z-index:2;width:190px;padding:10px 12px;background:rgba(255,255,255,.88);border:1px solid rgba(194,224,216,.95);border-radius:6px;box-shadow:0 8px 22px rgba(28,95,99,.1)}.hero-condition-note strong,.hero-condition-note span,.hero-condition-note small{display:block}.hero-condition-note strong{color:#147080;font-size:10px}.hero-condition-note span{margin-top:3px;color:#49666c;font-size:9px;line-height:1.35}.hero-condition-note small{margin-top:5px;color:#8a6554;font-size:9px;line-height:1.35}@media(max-width:850px){.hero-condition-note{right:7%;top:75%}}@media(max-width:560px){.hero-condition-note{position:static;width:auto;margin:14px 0 0}.hero-condition-note span{font-size:10px}.hero-condition-note small{font-size:10px}}';
 document.head.appendChild(heroConditionStyle);
+
+function updateTodayDateLabel(){
+  const label=document.querySelector('#todayDateLabel');
+  if(!label)return;
+  const dateText=new Intl.DateTimeFormat('ko-KR',{
+    timeZone:'Asia/Seoul',
+    year:'numeric',
+    month:'long',
+    day:'numeric',
+    weekday:'long'
+  }).format(new Date());
+  label.textContent=`${dateText} · BUSAN`;
+}
+updateTodayDateLabel();
