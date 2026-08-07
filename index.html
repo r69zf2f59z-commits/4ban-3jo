@@ -44,9 +44,7 @@
             </div>
           </div>
           <div class="hero-orbit" aria-hidden="true">
-            <div class="sun"></div>
-            <div class="wave wave-one"></div>
-            <div class="wave wave-two"></div>
+            <img class="hero-mascot" src="sea-pick-mascot-transparent.png" alt="" />
             <div class="hero-badge" id="heroConditionBadge" aria-label="오늘의 해양 활동 컨디션"><strong id="heroConditionScore">86</strong><span>오늘의<br>컨디션</span></div>
             <div class="hero-condition-note" id="heroConditionNote"><strong>오늘의 컨디션</strong><span>바람·비·기온 기준</span><small id="heroConditionStatus">점수가 높을수록 좋아요.</small></div>
             <span class="float-label label-wind">WIND 6 m/s</span>
@@ -146,6 +144,7 @@
     </style>
     <style>
       .brand-mark{display:grid;place-items:center;width:36px;height:36px;background:linear-gradient(145deg,#073f67,#0799b4);border-radius:13px;box-shadow:0 8px 17px rgba(0,101,146,.25)}.brand-mark svg{width:28px;height:28px;overflow:visible;fill:#ffd67d;stroke:#fff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}.safety-card{background:linear-gradient(150deg,#063a60,#086784 62%,#078b9a)!important}.safety-card .eyebrow{color:#9df4f4!important}.safety-card h3{color:#fff!important;text-shadow:none}.safety-card p,.safety-card .safety-row{color:#d8f5f6!important}.safety-card .safety-row strong{color:#fff}.safety-card .outline-button{border-color:rgba(214,250,249,.62);background:rgba(255,255,255,.1);color:#fff}.safety-card .outline-button:hover{color:#fff;border-color:#fff;background:rgba(255,255,255,.18)}@media(max-width:560px){.brand-mark{width:29px;height:29px;border-radius:10px}.brand-mark svg{width:23px;height:23px}}
+      .hero-mascot{position:absolute;right:32px;bottom:-8px;width:330px;height:330px;object-fit:contain;filter:drop-shadow(0 18px 18px rgba(0,71,104,.2))}.hero-orbit .sun,.hero-orbit .wave{display:none}.hero-badge{z-index:3}.hero-condition-note{z-index:3}@media(max-width:850px){.hero-mascot{right:0;width:315px;height:315px}}@media(max-width:560px){.hero-mascot{right:50%;bottom:58px;width:320px;height:320px;transform:translateX(50%)}.hero-badge{right:6px;top:24px}.label-wind{top:232px}.label-water{top:264px}}
     </style>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="app.js?v=20260807liveconditions"></script>
