@@ -126,23 +126,16 @@
     <div class="safety-modal" id="safetyModal" aria-hidden="true">
       <div class="modal-backdrop" data-close-safety></div>
       <section class="safety-panel" role="dialog" aria-modal="true" aria-labelledby="safetyTitle">
-        <div class="modal-heading"><div><p class="eyebrow">BEFORE YOU GO</p><h2 id="safetyTitle">안전 체크리스트</h2></div><button class="close-modal" type="button" data-close-safety aria-label="안전 체크리스트 닫기">×</button></div>
-        <p class="safety-intro">바다에 들어가기 전 아래 항목을 꼭 확인하세요. 하나라도 해당되지 않으면 출발을 잠시 미뤄주세요.</p>
-        <div class="checklist-summary"><strong id="checklistProgress">0/6</strong><span>출발 전 확인 항목</span></div>
-        <div class="checklist" id="checklist">
-          <label class="check-item"><input type="checkbox"><span><strong>기상 특보와 풍랑 예보 확인</strong><small>강풍·호우·풍랑 특보가 있으면 입수를 미뤄요.</small></span></label>
-          <label class="check-item"><input type="checkbox"><span><strong>파도·바람·수온 확인</strong><small>활동 수준에 맞는 파도와 바람인지 확인해요.</small></span></label>
-          <label class="check-item"><input type="checkbox"><span><strong>구명조끼와 활동 장비 점검</strong><small>버클, 스트랩, 보드의 균열과 공기압을 살펴봐요.</small></span></label>
-          <label class="check-item"><input type="checkbox"><span><strong>동행자·귀가 시간 공유</strong><small>혼자 출발하지 말고 보호자에게 위치를 알려요.</small></span></label>
-          <label class="check-item"><input type="checkbox"><span><strong>휴대폰 방수·비상 연락 준비</strong><small>방수팩과 충전 상태, 119 연락 방법을 확인해요.</small></span></label>
-          <label class="check-item"><input type="checkbox"><span><strong>자외선 차단·수분 보충 준비</strong><small>선크림, 물, 모자와 휴식 시간을 준비해요.</small></span></label>
-        </div>
-        <div class="warning-box"><strong>주의할 점</strong><p>해가 지기 1시간 전에는 물에서 나오고, 음주 후 수상 활동은 절대 하지 마세요. 몸이 좋지 않거나 파도가 예상보다 높으면 즉시 장소를 떠나세요.</p></div>
-        <button class="check-complete" type="button" id="checkComplete">확인 완료 · 안전하게 출발하기</button>
+        <div class="modal-heading"><div><p class="eyebrow">BEFORE YOU GO</p><h2 id="safetyTitle">바다 안전 OX 퀴즈</h2></div><button class="close-modal" type="button" data-close-safety aria-label="안전 OX 퀴즈 닫기">×</button></div>
+        <p class="safety-intro">출발 전 10문제에 답해보세요. 7문제 이상 맞히면 오늘의 바다 활동을 준비할 수 있어요.</p>
+        <div class="checklist-summary"><strong id="checklistProgress">0/10</strong><span>답변 완료</span></div>
+        <div class="checklist quiz-list" id="checklist"></div>
+        <div class="quiz-result" id="quizResult" hidden></div>
+        <button class="check-complete" type="button" id="checkComplete">결과 확인하기</button>
       </section>
     </div>
     <div class="toast" id="toast" role="status"></div>
     <script src="google-maps-config.js"></script>
-    <script src="app.js?v=20260807guide"></script>
+    <script src="app.js?v=20260807quiz"></script>
   </body>
 </html>

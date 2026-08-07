@@ -244,3 +244,36 @@ document.querySelectorAll('.activity-tab').forEach(tab=>tab.addEventListener('cl
 const activityGuideStyle=document.createElement('style');
 activityGuideStyle.textContent='.activity-safety-guide{display:grid;grid-template-columns:auto 1fr;gap:15px;margin:16px 0 4px;padding:17px 18px;background:#f2f8f5;border:1px solid #cce5dc;border-radius:7px}.activity-safety-guide[hidden]{display:none}.activity-guide-icon{display:grid;place-items:center;width:34px;height:34px;color:#fff;background:#147080;border-radius:50%;font-size:19px}.activity-safety-guide .eyebrow{margin:0;color:#4d8b84;font-size:9px}.activity-safety-guide h3{margin:4px 0 5px;color:#173042;font-size:16px}.activity-guide-summary{margin:0;color:#627b80;font-size:11px;line-height:1.5}.activity-safety-guide ul{display:grid;gap:4px;margin:10px 0 0;padding-left:16px;color:#526b70;font-size:10px;line-height:1.45}.activity-safety-guide li::marker{color:#ef8b68}@media(max-width:560px){.activity-safety-guide{gap:10px;padding:14px}.activity-safety-guide h3{font-size:14px}}';
 document.head.appendChild(activityGuideStyle);
+
+const safetyQuizQuestions=[
+  {question:'풍랑 특보가 있어도 파도가 낮아 보이면 바로 입수해도 된다.',answer:false,tip:'특보가 발효 중이면 입수를 미루고 안내를 따라야 해요.'},
+  {question:'카약과 패들보드는 구명조끼를 출발부터 복귀까지 착용해야 한다.',answer:true,tip:'장비 활동은 항상 구명조끼를 착용해요.'},
+  {question:'음주 후 수상 레저 활동은 판단력이 괜찮다면 가능하다.',answer:false,tip:'음주 후 수상 활동은 절대 하지 않아요.'},
+  {question:'서핑할 때 리쉬는 보드와 연결되어 있는지 확인해야 한다.',answer:true,tip:'리쉬는 보드 유실과 충돌 위험을 줄여줘요.'},
+  {question:'해가 지기 시작해도 인원이 많으면 계속 활동해도 된다.',answer:false,tip:'해 지기 전에는 물에서 나와 시야가 확보될 때 마무리해요.'},
+  {question:'출발 전 휴대폰 방수팩과 비상 연락 방법을 확인하는 것이 좋다.',answer:true,tip:'119 연락 방법과 동행자 연락처를 미리 준비해요.'},
+  {question:'바람이 강해지면 패들보드는 앉거나 무릎을 꿇은 자세로 이동할 수 있다.',answer:true,tip:'균형이 어렵다면 낮은 자세로 이동하고 무리하지 않아요.'},
+  {question:'혼자 멀리 이동해도 장비가 있으면 안전하므로 귀가 시간을 알릴 필요가 없다.',answer:false,tip:'동행자나 보호자에게 장소와 귀가 시간을 꼭 공유해요.'},
+  {question:'수온이 낮을 때는 보온 장비와 활동 시간을 더 신경 써야 한다.',answer:true,tip:'저체온을 막기 위해 보온 장비와 휴식을 준비해요.'},
+  {question:'파도가 예상보다 높아지면 즉시 해변으로 돌아와야 한다.',answer:true,tip:'현장 조건이 달라지면 즉시 활동을 멈추고 안전 구역으로 이동해요.'}
+];
+let safetyQuizAnswers={};
+const quizList=document.querySelector('#checklist'),quizProgress=document.querySelector('#checklistProgress'),quizResult=document.querySelector('#quizResult'),quizComplete=document.querySelector('#checkComplete');
+function updateQuizProgress(){quizProgress.textContent=`${Object.keys(safetyQuizAnswers).length}/10`}
+function renderSafetyQuiz(){
+  safetyQuizAnswers={};quizResult.hidden=true;quizResult.innerHTML='';quizComplete.textContent='결과 확인하기';
+  quizList.innerHTML=safetyQuizQuestions.map((item,index)=>`<article class="quiz-item" data-question="${index}"><div class="quiz-question"><span>${index+1}</span><strong>${item.question}</strong></div><div class="quiz-actions"><button type="button" data-answer="true">O</button><button type="button" data-answer="false">X</button></div><small class="quiz-tip" hidden></small></article>`).join('');
+  quizList.querySelectorAll('[data-answer]').forEach(button=>button.onclick=()=>{const row=button.closest('.quiz-item');const index=Number(row.dataset.question);safetyQuizAnswers[index]=button.dataset.answer==='true';row.querySelectorAll('[data-answer]').forEach(action=>action.classList.toggle('selected',action===button));updateQuizProgress()});
+  updateQuizProgress();
+}
+document.querySelector('#safetyButton').addEventListener('click',renderSafetyQuiz);
+quizComplete.onclick=()=>{
+  if(Object.keys(safetyQuizAnswers).length<10){toastMessage(`아직 ${10-Object.keys(safetyQuizAnswers).length}문제를 더 풀어주세요.`);return}
+  let score=0;quizList.querySelectorAll('.quiz-item').forEach(row=>{const index=Number(row.dataset.question);const item=safetyQuizQuestions[index];const correct=safetyQuizAnswers[index]===item.answer;if(correct)score++;row.classList.add(correct?'is-correct':'is-wrong');row.querySelector('.quiz-tip').textContent=correct?'정답이에요. '+item.tip:'다시 확인해요. '+item.tip;row.querySelector('.quiz-tip').hidden=false;row.querySelectorAll('button').forEach(button=>button.disabled=true)});
+  const ready=score>=7;quizResult.hidden=false;quizResult.className=`quiz-result ${ready?'is-ready':'needs-review'}`;quizResult.innerHTML=`<strong>${ready?'🎉 바다 활동을 준비했어요!':'🛟 한 번 더 안전을 확인해요.'}</strong><p>${score}/10문제 정답 · ${ready?'출발 전 현장 날씨와 특보만 다시 확인하고 안전하게 즐기세요.':'7문제 이상 정답이면 준비 완료예요. 틀린 항목을 다시 확인해보세요.'}</p><button type="button" id="quizRetry">다시 풀기</button>`;
+  quizResult.querySelector('#quizRetry').onclick=renderSafetyQuiz;quizComplete.textContent=ready?'준비 완료':'안전 항목 다시 보기';
+};
+renderSafetyQuiz();
+const quizStyle=document.createElement('style');
+quizStyle.textContent='.quiz-list{gap:9px}.quiz-item{padding:13px;background:#fff;border:1px solid var(--line);border-radius:7px}.quiz-question{display:flex;gap:9px;align-items:flex-start}.quiz-question>span{display:grid;place-items:center;width:20px;height:20px;flex:none;color:#fff;background:#147080;border-radius:50%;font:700 10px "Space Grotesk"}.quiz-question strong{color:var(--ink);font-size:12px;line-height:1.45}.quiz-actions{display:flex;gap:6px;margin:10px 0 0 29px}.quiz-actions button{width:42px;padding:6px;color:#547278;background:#f7faf8;border:1px solid #d3e5df;border-radius:4px;font-size:11px;font-weight:700;cursor:pointer}.quiz-actions button.selected{color:#fff;background:#147080;border-color:#147080}.quiz-item.is-correct{border-color:#8bcbb9;background:#f1faf5}.quiz-item.is-wrong{border-color:#efb496;background:#fff8f2}.quiz-item.is-correct .quiz-question>span{background:#55af94}.quiz-item.is-wrong .quiz-question>span{background:#ef8b68}.quiz-tip{display:block;margin:8px 0 0 29px;color:#6b7e7e;font-size:10px;line-height:1.45}.quiz-result{margin-top:14px;padding:14px;border-radius:6px}.quiz-result strong{font-size:14px}.quiz-result p{margin:6px 0 10px;font-size:11px;line-height:1.55}.quiz-result.is-ready{color:#216b5c;background:#eaf8f1;border:1px solid #a8d9c5}.quiz-result.needs-review{color:#985a43;background:#fff3e9;border:1px solid #f0c4a7}.quiz-result button{padding:7px 10px;color:inherit;background:rgba(255,255,255,.65);border:1px solid currentColor;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer}@media(max-width:560px){.quiz-item{padding:11px}.quiz-question strong{font-size:11px}.quiz-actions{margin-left:27px}.quiz-tip{margin-left:27px}}';
+document.head.appendChild(quizStyle);
