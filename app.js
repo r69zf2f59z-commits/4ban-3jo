@@ -326,7 +326,7 @@ function updateHeroCondition(current){
   if(temperature<17)score-=(17-temperature)*2;
   if(temperature>31)score-=(temperature-31)*1.5;
   score=Math.max(35,Math.min(100,Math.round(score)));
-  const status=score>=85?'아주 좋아요 · 가벼운 해양 레저를 즐기기 좋은 날이에요.':score>=70?'활동하기 좋아요 · 출발 전 현장 바람과 파도만 한 번 더 확인하세요.':score>=55?'확인 후 활동 · 바람과 강수량을 살피고 무리한 활동은 피하세요.':'주의 필요 · 기상 변화가 있어 활동을 미루는 편이 안전해요.';
+  const status=score>=85?'아주 좋아요 · 활동하기 좋은 날이에요.':score>=70?'활동하기 좋아요 · 현장 바람만 확인하세요.':score>=55?'확인 후 활동 · 바람과 비를 살피세요.':'주의 필요 · 활동을 미루는 편이 안전해요.';
   const scoreNode=document.querySelector('#heroConditionScore'),statusNode=document.querySelector('#heroConditionStatus'),badge=document.querySelector('#heroConditionBadge');
   if(scoreNode)scoreNode.textContent=score;if(statusNode)statusNode.textContent=status;if(badge)badge.setAttribute('aria-label',`오늘의 해양 활동 컨디션 ${score}점. ${status}`);
 }
@@ -334,7 +334,7 @@ const weatherUpdateWithCondition=updateWeather;
 updateWeather=function(data){weatherUpdateWithCondition(data);updateHeroCondition(data.current||{})};
 updateHeroCondition({temperature_2m:23,precipitation:0,wind_speed_10m:3,weather_code:1});
 const heroConditionStyle=document.createElement('style');
-heroConditionStyle.textContent='.hero-condition-note{position:absolute;right:6%;top:77%;z-index:2;width:190px;padding:10px 12px;background:rgba(255,255,255,.88);border:1px solid rgba(194,224,216,.95);border-radius:6px;box-shadow:0 8px 22px rgba(28,95,99,.1)}.hero-condition-note strong,.hero-condition-note span,.hero-condition-note small{display:block}.hero-condition-note strong{color:#147080;font-size:10px}.hero-condition-note span{margin-top:3px;color:#49666c;font-size:9px;line-height:1.35}.hero-condition-note small{margin-top:5px;color:#8a6554;font-size:9px;line-height:1.35}@media(max-width:850px){.hero-condition-note{right:7%;top:75%}}@media(max-width:560px){.hero-condition-note{position:static;width:auto;margin:14px 0 0}.hero-condition-note span{font-size:10px}.hero-condition-note small{font-size:10px}}';
+heroConditionStyle.textContent='.hero-condition-note{position:absolute;right:6%;top:77%;z-index:2;width:178px;padding:9px 11px;background:rgba(255,255,255,.88);border:1px solid rgba(194,224,216,.95);border-radius:6px;box-shadow:0 8px 22px rgba(28,95,99,.1)}.hero-condition-note strong,.hero-condition-note span,.hero-condition-note small{display:block}.hero-condition-note strong{color:#147080;font-size:10px}.hero-condition-note span{margin-top:2px;color:#49666c;font-size:9px;line-height:1.3}.hero-condition-note small{margin-top:4px;color:#8a6554;font-size:9px;line-height:1.3}@media(max-width:850px){.hero-condition-note{right:7%;top:75%}}@media(max-width:560px){.hero{min-height:auto!important;padding-bottom:42px}.hero-copy{width:100%}.hero-description{margin:20px 0 22px;font-size:14px}.hero-orbit{width:330px;height:390px;margin:32px auto 0;transform:scale(.82);transform-origin:top center}.hero-condition-note{position:absolute;top:330px;right:50%;width:265px;margin:0;transform:translateX(50%) scale(1.22);transform-origin:top center}.hero-condition-note span,.hero-condition-note small{font-size:10px}.label-wind{top:236px}.label-water{top:271px}}';
 document.head.appendChild(heroConditionStyle);
 
 function updateTodayDateLabel(){
