@@ -6,16 +6,16 @@
     <title>Sea Pick — 오늘의 바다를 고르다</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260807weather" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260807oceandesign" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   </head>
   <body>
     <div class="app-shell">
       <header class="topbar">
         <a class="brand" href="#top" aria-label="Sea Pick 홈">
-          <span class="brand-mark">◒</span>
-          <span>sea pick</span>
+            <span class="brand-mark">≋</span>
+            <span class="brand-text">SEA PICK</span>
         </a>
         <nav class="nav-links" aria-label="주요 메뉴">
           <a class="active" href="#recommendations">추천</a>
@@ -137,6 +137,13 @@
       </section>
     </div>
     <div class="toast" id="toast" role="status"></div>
+    <style>
+      :root{--ink:#092f49;--muted:#5b7386;--cream:#f3fbff;--blue:#45d3df;--deep:#067ca0;--coral:#ff8e67;--line:#d1e8f0;--shadow:0 18px 44px rgba(3,69,102,.12)}
+      body{background:linear-gradient(180deg,#edfaff,#f7fcff 45%,#eaf8fc);font-family:'Noto Sans KR','DM Sans',sans-serif}.app-shell{background:transparent}.topbar{height:78px;background:rgba(250,254,255,.86);border-color:#d3ebf1;backdrop-filter:blur(18px)}.brand{gap:10px;color:#063b5a;font:800 21px 'Space Grotesk','Noto Sans KR';letter-spacing:.8px}.brand-mark{width:34px;height:34px;color:#fff;background:linear-gradient(135deg,#04a6bf,#056aa7);border-radius:12px;font-size:28px;line-height:29px;transform:none;box-shadow:0 7px 15px rgba(0,125,160,.24)}.nav-links a{font-weight:700}.nav-links a.active,.nav-links a:hover{color:#067ca0}.profile-button{padding:8px 12px;background:#e8f8fb;border:1px solid #c8e9ef;border-radius:999px}
+      .hero{min-height:560px;overflow:hidden;background:radial-gradient(circle at 78% 26%,rgba(104,230,238,.53),transparent 24%),radial-gradient(circle at 15% 85%,rgba(82,175,231,.22),transparent 34%),linear-gradient(125deg,#e9fbff,#effcff 47%,#d8f4f6)}.hero:before{content:'';position:absolute;inset:auto -10% -130px;height:270px;background:radial-gradient(ellipse at center,rgba(22,150,185,.18) 0 32%,transparent 33%) 0 0/240px 72px repeat-x}.hero-copy{max-width:520px}.eyebrow{color:#0789a8;font-weight:800}h1,h2,h3{color:#073b58}h1 em{color:#0789a8}.search-box{padding:6px;border-color:#c5e7ee;border-radius:14px;box-shadow:0 14px 30px rgba(7,101,137,.13)}.search-box button,.save-profile{background:linear-gradient(135deg,#078db0,#056f9b);border-radius:10px}.weather-strip{box-shadow:0 10px 24px rgba(8,115,148,.08)!important}.weather-main,.weather-stat{background:rgba(255,255,255,.62)!important;border-color:#c5e7ee!important}.hero-badge{border:1px solid #d2eff3;border-radius:16px}.hero-badge strong{color:#078ba9}.float-label{color:#057790;background:rgba(255,255,255,.82);border:1px solid #c5e7ee}
+      .content-section{padding-top:78px}.section-heading h2{font-weight:800}.activity-tab,.sort-button{border-color:#c7e5ec;background:rgba(255,255,255,.72);font-weight:700}.activity-tab.active,.activity-tab:hover,.sort-button.active,.sort-button:hover{background:linear-gradient(135deg,#078fb0,#05749e);border-color:#078fb0;box-shadow:0 6px 12px rgba(3,116,154,.16)}.spot-card,.map-card{border-color:#c7e5ec;border-radius:16px;box-shadow:0 10px 25px rgba(12,92,122,.06)}.spot-card:hover{box-shadow:0 20px 36px rgba(6,98,132,.16)}.spot-visual{height:164px}.rank{background:linear-gradient(135deg,#047c9f,#055c94);border-radius:8px}.favorite{color:#0b7695;background:rgba(255,255,255,.92)}.spot-title-row h3{font-weight:800}.condition{color:#057994;background:#e8f8fb;border:1px solid #d2edf1}.spot-footer strong{color:#0387a2}.map-card{background:rgba(255,255,255,.8)}.safety-card{border:1px solid rgba(17,126,156,.2);border-radius:16px;background:linear-gradient(150deg,#062f4e,#075a79 62%,#057d91);box-shadow:0 18px 38px rgba(3,57,86,.2)}.outline-button{border-radius:9px;background:rgba(255,255,255,.06)}footer{background:rgba(255,255,255,.52)}.detail-view,.page-view,.profile-view{background:linear-gradient(180deg,#effbff,#f8fdff)}.detail-back,.detail-map-card,.detail-info-card,.profile-card,.rental-page-list{border-color:#cce7ee;border-radius:15px}.detail-photo{box-shadow:0 20px 36px rgba(4,84,120,.18)}
+      @media(max-width:560px){.topbar{background:rgba(250,254,255,.94)}.brand{font-size:16px}.brand-mark{width:29px;height:29px;border-radius:10px;font-size:24px;line-height:25px}.spot-card,.map-card,.safety-card{border-radius:13px}}
+    </style>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="app.js?v=20260807liveconditions"></script>
   </body>
